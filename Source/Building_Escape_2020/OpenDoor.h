@@ -27,6 +27,8 @@ public:
 private:
 	float CurrentDoorYaw;
 	float TargetYaw;
+
+	UPROPERTY(EditAnywhere)
 	float Increment = 90; // By how much we want the door to open
 		
 };
