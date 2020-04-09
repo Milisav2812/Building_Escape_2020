@@ -3,6 +3,11 @@
 
 #include "OpenDoor.h"
 #include "GameFramework/Actor.h"
+#include "GameFramework/PlayerController.h"
+#include "Engine/World.h"
+
+//#include "GameFramework/DefaultPawn.h"
+//#include "GameFramework/Controller.h"
 
 // Sets default values for this component's properties
 UOpenDoor::UOpenDoor()
@@ -22,18 +27,29 @@ void UOpenDoor::BeginPlay()
 
 	// Get CurrentYaw and set Target Yaw
 	CurrentDoorYaw = GetOwner()->GetActorRotation().Yaw;
-	TargetYaw = CurrentDoorYaw + Increment;
+	OpenDoorYaw = CurrentDoorYaw + Increment;
+
+	ActorThatTriggersPressurePlate = GetWorld()->GetFirstPlayerController()->GetPawn();
 }
 
 
 // Called every frame
 void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
-	// Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	
-	UE_LOG(LogTemp, Warning, TEXT("DoorYaw: %f"), CurrentDoorYaw)
+	// UE_LOG(LogTemp, Warning, TEXT("DoorYaw: %f"), CurrentDoorYaw)
+	if (!ensure(PressurePlate)) return;
 	
-	CurrentDoorYaw = FMath::FInterpTo(CurrentDoorYaw, TargetYaw, DeltaTime, 2);
+	if (PressurePlate->IsOverlappingActor(ActorThatTriggersPressurePlate))
+	{
+		OpenDoor(DeltaTime);
+	}
+}
+
+void UOpenDoor::OpenDoor(float DeltaTime)
+{
+	CurrentDoorYaw = FMath::FInterpTo(CurrentDoorYaw, OpenDoorYaw, DeltaTime, 2);
 	GetOwner()->SetActorRotation(FRotator(0, CurrentDoorYaw, 0));
 }
 
