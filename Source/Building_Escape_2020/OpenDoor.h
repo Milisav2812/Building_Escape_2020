@@ -27,10 +27,12 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	void OpenDoor(float DeltaTime);
+	void CloseDoor(float DeltaTime);
 
 private:
 	float CurrentDoorYaw;
 	float OpenDoorYaw;
+	float CloseDoorYaw;
 
 	UPROPERTY(EditAnywhere)
 	float Increment = 90; // By how much we want the door to open

@@ -27,6 +27,7 @@ void UOpenDoor::BeginPlay()
 
 	// Get CurrentYaw and set Target Yaw
 	CurrentDoorYaw = GetOwner()->GetActorRotation().Yaw;
+	CloseDoorYaw = CurrentDoorYaw;
 	OpenDoorYaw = CurrentDoorYaw + Increment;
 
 	ActorThatTriggersPressurePlate = GetWorld()->GetFirstPlayerController()->GetPawn();
@@ -45,11 +46,23 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 	{
 		OpenDoor(DeltaTime);
 	}
+	else
+	{
+		CloseDoor(DeltaTime);
+	}
 }
 
 void UOpenDoor::OpenDoor(float DeltaTime)
 {
+	// UE_LOG(LogTemp, Warning, TEXT("DoorOpen: %f"), CurrentDoorYaw)
 	CurrentDoorYaw = FMath::FInterpTo(CurrentDoorYaw, OpenDoorYaw, DeltaTime, 2);
+	GetOwner()->SetActorRotation(FRotator(0, CurrentDoorYaw, 0));
+}
+
+void UOpenDoor::CloseDoor(float DeltaTime)
+{
+	// UE_LOG(LogTemp, Error, TEXT("DoorClose: %f"), CurrentDoorYaw)
+	CurrentDoorYaw = FMath::FInterpTo(CurrentDoorYaw, CloseDoorYaw, DeltaTime, 2);
 	GetOwner()->SetActorRotation(FRotator(0, CurrentDoorYaw, 0));
 }
 
