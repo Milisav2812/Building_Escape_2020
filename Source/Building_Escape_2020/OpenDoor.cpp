@@ -26,9 +26,9 @@ void UOpenDoor::BeginPlay()
 	Super::BeginPlay();
 
 	// Get CurrentYaw and set Target Yaw
-	CurrentDoorYaw = GetOwner()->GetActorRotation().Yaw;
-	CloseDoorYaw = CurrentDoorYaw;
-	OpenDoorYaw = CurrentDoorYaw + Increment;
+	CurrentDoorAngle = GetOwner()->GetActorRotation().Yaw;
+	CloseDoorAngle = CurrentDoorAngle;
+	OpenDoorAngle = CurrentDoorAngle + OpeningAngle;
 
 	ActorThatTriggersPressurePlate = GetWorld()->GetFirstPlayerController()->GetPawn();
 }
@@ -45,24 +45,29 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 	if (PressurePlate->IsOverlappingActor(ActorThatTriggersPressurePlate))
 	{
 		OpenDoor(DeltaTime);
+		DoorLastOpened = GetWorld()->GetTimeSeconds(); // Returns the time in seconds since the Game was started
 	}
 	else
 	{
-		CloseDoor(DeltaTime);
+		if ( (GetWorld()->GetTimeSeconds() - DoorLastOpened) > DoorCloseDelay)
+		{
+			CloseDoor(DeltaTime);
+		}
 	}
 }
 
 void UOpenDoor::OpenDoor(float DeltaTime)
 {
 	// UE_LOG(LogTemp, Warning, TEXT("DoorOpen: %f"), CurrentDoorYaw)
-	CurrentDoorYaw = FMath::FInterpTo(CurrentDoorYaw, OpenDoorYaw, DeltaTime, 2);
-	GetOwner()->SetActorRotation(FRotator(0, CurrentDoorYaw, 0));
+	CurrentDoorAngle = FMath::FInterpTo(CurrentDoorAngle, OpenDoorAngle, DeltaTime, 2);
+	GetOwner()->SetActorRotation(FRotator(0, CurrentDoorAngle, 0));
 }
 
 void UOpenDoor::CloseDoor(float DeltaTime)
 {
 	// UE_LOG(LogTemp, Error, TEXT("DoorClose: %f"), CurrentDoorYaw)
-	CurrentDoorYaw = FMath::FInterpTo(CurrentDoorYaw, CloseDoorYaw, DeltaTime, 2);
-	GetOwner()->SetActorRotation(FRotator(0, CurrentDoorYaw, 0));
+	CurrentDoorAngle = FMath::FInterpTo(CurrentDoorAngle, CloseDoorAngle, DeltaTime, 2);
+	// ALTERNATIVE CurrentDoorAngle = FMath::Lerp(CurrentDoorAngle, CloseDoorAngle, DeltaTime * .8f);
+	GetOwner()->SetActorRotation(FRotator(0, CurrentDoorAngle, 0));
 }
 

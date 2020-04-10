@@ -30,17 +30,20 @@ public:
 	void CloseDoor(float DeltaTime);
 
 private:
-	float CurrentDoorYaw;
-	float OpenDoorYaw;
-	float CloseDoorYaw;
+	float CurrentDoorAngle;
+	float OpenDoorAngle;
+	float CloseDoorAngle;
+
+	float DoorLastOpened = 0.f;
+	UPROPERTY(EditAnywhere)
+	float DoorCloseDelay = 0.5f;
 
 	UPROPERTY(EditAnywhere)
-	float Increment = 90; // By how much we want the door to open
+	float OpeningAngle = 90; // By how much we want the door to open
 
 	UPROPERTY(EditAnywhere)
 	ATriggerVolume* PressurePlate = nullptr;
 
-	// UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere)
 	AActor* ActorThatTriggersPressurePlate = nullptr;
-		
 };
