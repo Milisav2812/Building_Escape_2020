@@ -63,6 +63,29 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	);
 #pragma endregion
 
+#pragma region Ray-Casting
+	FHitResult Hit{};
+	FCollisionQueryParams TraceParams(
+		FName(TEXT("")), 
+		false, // Use Complex or Simple Collision
+		GetOwner() // The Actor that the Ray-Cast will ignore
+	);
+
+	GetWorld()->LineTraceSingleByObjectType(
+		OUT Hit,
+		LineTraceStart,
+		LineTraceEnd,
+		FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody), // Our Ray-Cast will only respond to PhysicsBody objects
+		TraceParams
+	);
+
+	if (Hit.GetActor())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("HitResult: %s"), *Hit.GetActor()->GetName())
+	}
+	
+#pragma endregion
+
 
 }
 
