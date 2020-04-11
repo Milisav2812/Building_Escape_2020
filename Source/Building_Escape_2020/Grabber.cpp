@@ -4,6 +4,7 @@
 #include "GameFramework/PlayerController.h"
 
 
+
 #define OUT_PARAM // Used to mark OUT parameters in function calls
 
 // Sets default values for this component's properties
@@ -13,8 +14,6 @@ UGrabber::UGrabber()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
-	if (!ensure(PhysicsHandle)) return;
 }
 
 
@@ -23,7 +22,38 @@ void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
+	if (!GetOwner())
+	{
+		UE_LOG(LogTemp, Error, TEXT("GetOwner() Returns NULL!"))
+			return;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("GetOwner() WORKS!"))
+	}
+
+	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+	if (!PhysicsHandle)
+	{
+		UE_LOG(LogTemp, Error, TEXT("PhysicsHandle Returns NULL!"))
+			return;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("PhysicsHandle WORKS!"))
+	}
+
+	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
+	if (!InputComponent)
+	{
+		UE_LOG(LogTemp, Error, TEXT("InputComponent Returns NULL!"))
+			return;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("InputComponent WORKS!"))
+			InputComponent->BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
+	}
 	
 }
 
@@ -86,5 +116,10 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	
 #pragma endregion
 
+}
+
+void UGrabber::Grab()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Object Grabbed!"))
 }
 
