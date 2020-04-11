@@ -1,5 +1,4 @@
 #include "Grabber.h"
-
 #include "DrawDebugHelpers.h"
 #include "Engine/World.h"
 #include "GameFramework/PlayerController.h"
@@ -14,7 +13,8 @@ UGrabber::UGrabber()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
+	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+	if (!ensure(PhysicsHandle)) return;
 }
 
 
@@ -85,7 +85,6 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	}
 	
 #pragma endregion
-
 
 }
 
