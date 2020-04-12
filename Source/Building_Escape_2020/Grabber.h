@@ -28,11 +28,15 @@ public:
 	void Grab();
 	void Release();
 	// Return the first Actor within range that has a PhysicsBody Collion Channel set
-	AActor* GetFirstPhysicsBodyInReach() const;
+	FHitResult GetFirstPhysicsBodyInReach();
 
 private:
 	UPROPERTY(EditDefaultsOnly)
 	float GrabberReach = 100.f;
+
+	// Player ViewPoint
+	FVector RayCastStart;
+	FVector RayCastEnd;
 
 	UPhysicsHandleComponent* PhysicsHandle = nullptr;
 	UInputComponent* InputComponent = nullptr;
@@ -40,4 +44,6 @@ private:
 	// Helper Functions
 	void InitPhysicsHandle();
 	void InitInputComponent();
+	// Calculate the Start and End Locations of Ray-Cast(FVectors)
+	void CalculateRayCastLocation(FVector& RayCastStart, FVector& RayCastEnd);
 };

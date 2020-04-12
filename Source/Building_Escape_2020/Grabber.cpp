@@ -26,77 +26,60 @@ void UGrabber::BeginPlay()
 void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	if (PhysicsHandle->GrabbedComponent)
+	{
+		CalculateRayCastLocation(OUT_PARAM RayCastStart, OUT_PARAM RayCastEnd);
+		PhysicsHandle->SetTargetLocation(RayCastEnd);
+	}
 }
 
 void UGrabber::Grab()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Object Grabbed!"))
-	AActor* ActorGrabbed = GetFirstPhysicsBodyInReach();
-	if (ActorGrabbed)
+	FHitResult HitResult = GetFirstPhysicsBodyInReach();
+
+	UPrimitiveComponent* GrabbedComponent = HitResult.GetComponent();
+	CalculateRayCastLocation(OUT_PARAM RayCastStart, OUT_PARAM RayCastEnd);
+	if (HitResult.GetActor())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("ActorHit: %s"), *ActorGrabbed->GetName())
+		PhysicsHandle->GrabComponentAtLocation(
+			GrabbedComponent,
+			NAME_None,
+			RayCastEnd
+		);
 	}
+
 }
 void UGrabber::Release()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Object Released!"))
+	if (PhysicsHandle->GrabbedComponent)
+	{
+		PhysicsHandle->ReleaseComponent();
+	}
 }
 
 // Return the first Actor within range that has a PhysicsBody Collion Channel set
-AActor* UGrabber::GetFirstPhysicsBodyInReach() const
+FHitResult UGrabber::GetFirstPhysicsBodyInReach()
 {
-#pragma region Get Player ViewPoint
-	
-	FVector PlayerViewLocation;
-	FRotator PlayerViewRotation;
-	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(
-		OUT_PARAM PlayerViewLocation,
-		OUT_PARAM PlayerViewRotation
-	);
-#pragma endregion
-
-#pragma region Draw Debug Line
-
-	FVector LineTraceStart = PlayerViewLocation;
-	FVector LineTraceEnd = LineTraceStart + PlayerViewRotation.Vector() * GrabberReach;
-
-	//DrawDebugLine(
-	//	GetWorld(),
-	//	LineTraceStart,
-	//	LineTraceEnd,
-	//	FColor::Green,
-	//	NULL,
-	//	NULL,
-	//	NULL,
-	//	5
-	//);
-#pragma endregion
-
-#pragma region Ray-Casting
-	
 	FHitResult Hit;
-
 	FCollisionQueryParams TraceParams(
 		FName(TEXT("")),
 		false, // Use Complex or Simple Collision
 		GetOwner() // The Actor that the Ray-Cast will ignore
 	);
-
+	CalculateRayCastLocation(OUT_PARAM RayCastStart, OUT_PARAM RayCastEnd);
+	
 	GetWorld()->LineTraceSingleByObjectType(
 		OUT Hit,
-		LineTraceStart,
-		LineTraceEnd,
+		RayCastStart,
+		RayCastEnd,
 		FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody), // Our Ray-Cast will only respond to PhysicsBody objects
 		TraceParams
 	);
-#pragma endregion
 
-	AActor* ActorHitWithRayCast = Hit.GetActor();
-	if (Hit.GetActor())
-	{
-		return ActorHitWithRayCast;
-	}
-	return nullptr;
+	return Hit;
 }
 
 void UGrabber::InitPhysicsHandle()
@@ -126,5 +109,29 @@ void UGrabber::InitInputComponent()
 		InputComponent->BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
 		InputComponent->BindAction("Grab", IE_Released, this, &UGrabber::Release);
 	}
+}
+
+void UGrabber::CalculateRayCastLocation(FVector& RayCastStart, FVector& RayCastEnd)
+{
+	FVector PlayerViewLocation;
+	FRotator PlayerViewRotation;
+	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(
+		OUT_PARAM PlayerViewLocation,
+		OUT_PARAM PlayerViewRotation
+	);
+
+	RayCastStart = PlayerViewLocation;
+	RayCastEnd = PlayerViewLocation + PlayerViewRotation.Vector() * GrabberReach;
+
+	//DrawDebugLine(
+	//	GetWorld(),
+	//	LineTraceStart,
+	//	LineTraceEnd,
+	//	FColor::Green,
+	//	NULL,
+	//	NULL,
+	//	NULL,
+	//	5
+	//);
 }
 
