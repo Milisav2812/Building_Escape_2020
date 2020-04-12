@@ -26,6 +26,9 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	void Grab();
+	void Release();
+	// Return the first Actor within range that has a PhysicsBody Collion Channel set
+	AActor* GetFirstPhysicsBodyInReach() const;
 
 private:
 	UPROPERTY(EditDefaultsOnly)
@@ -33,4 +36,8 @@ private:
 
 	UPhysicsHandleComponent* PhysicsHandle = nullptr;
 	UInputComponent* InputComponent = nullptr;
+
+	// Helper Functions
+	void InitPhysicsHandle();
+	void InitInputComponent();
 };
