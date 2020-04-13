@@ -29,6 +29,8 @@ public:
 	void OpenDoor(float DeltaTime);
 	void CloseDoor(float DeltaTime);
 
+	float TotalMassOfActorsOnPressurePlate() const;
+
 private:
 	float CurrentDoorAngle;
 	float OpenDoorAngle;
@@ -40,6 +42,9 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	float OpeningAngle = 90; // By how much we want the door to open
+
+	UPROPERTY(EditAnywhere)
+	float MassThatOpensDoor = 60.f;
 
 	UPROPERTY(EditAnywhere)
 	ATriggerVolume* PressurePlate = nullptr;

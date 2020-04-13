@@ -4,7 +4,10 @@
 #include "OpenDoor.h"
 #include "GameFramework/Actor.h"
 #include "GameFramework/PlayerController.h"
+#include "Components/PrimitiveComponent.h"
 #include "Engine/World.h"
+
+#define OUT_PARAM
 
 //#include "GameFramework/DefaultPawn.h"
 //#include "GameFramework/Controller.h"
@@ -15,8 +18,6 @@ UOpenDoor::UOpenDoor()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
 }
 
 
@@ -42,7 +43,7 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 	// UE_LOG(LogTemp, Warning, TEXT("DoorYaw: %f"), CurrentDoorYaw)
 	if (!ensure(PressurePlate)) return;
 	
-	if (PressurePlate->IsOverlappingActor(ActorThatTriggersPressurePlate))
+	if (TotalMassOfActorsOnPressurePlate() >= MassThatOpensDoor)
 	{
 		OpenDoor(DeltaTime);
 		DoorLastOpened = GetWorld()->GetTimeSeconds(); // Returns the time in seconds since the Game was started
@@ -69,5 +70,20 @@ void UOpenDoor::CloseDoor(float DeltaTime)
 	CurrentDoorAngle = FMath::FInterpTo(CurrentDoorAngle, CloseDoorAngle, DeltaTime, 2);
 	// ALTERNATIVE CurrentDoorAngle = FMath::Lerp(CurrentDoorAngle, CloseDoorAngle, DeltaTime * .8f);
 	GetOwner()->SetActorRotation(FRotator(0, CurrentDoorAngle, 0));
+}
+
+float UOpenDoor::TotalMassOfActorsOnPressurePlate() const
+{
+	TArray<AActor*> ActorsOnPressurePlate;
+	PressurePlate->GetOverlappingActors(OUT_PARAM ActorsOnPressurePlate);
+	float TotalMass = 0.f;
+
+	for (auto Actor : ActorsOnPressurePlate)
+	{
+		UPrimitiveComponent* ActorComponent = static_cast<UPrimitiveComponent*>(Actor->GetRootComponent());
+		TotalMass += ActorComponent->GetMass();
+	}
+
+	return TotalMass;
 }
 

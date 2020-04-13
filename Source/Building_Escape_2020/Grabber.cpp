@@ -36,7 +36,6 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 
 void UGrabber::Grab()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Object Grabbed!"))
 	FHitResult HitResult = GetFirstPhysicsBodyInReach();
 
 	UPrimitiveComponent* GrabbedComponent = HitResult.GetComponent();
@@ -53,7 +52,6 @@ void UGrabber::Grab()
 }
 void UGrabber::Release()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Object Released!"))
 	if (PhysicsHandle->GrabbedComponent)
 	{
 		PhysicsHandle->ReleaseComponent();
@@ -111,7 +109,7 @@ void UGrabber::InitInputComponent()
 	}
 }
 
-void UGrabber::CalculateRayCastLocation(FVector& RayCastStart, FVector& RayCastEnd)
+void UGrabber::CalculateRayCastLocation(FVector& OUT_RayCastStart, FVector& OUT_RayCastEnd)
 {
 	FVector PlayerViewLocation;
 	FRotator PlayerViewRotation;

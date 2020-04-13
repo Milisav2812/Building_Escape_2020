@@ -34,8 +34,9 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	float GrabberReach = 100.f;
 
-	// Player ViewPoint
+	// Players Position in The World
 	FVector RayCastStart;
+	// Location of the The End of Ray-Cast
 	FVector RayCastEnd;
 
 	UPhysicsHandleComponent* PhysicsHandle = nullptr;
@@ -45,5 +46,5 @@ private:
 	void InitPhysicsHandle();
 	void InitInputComponent();
 	// Calculate the Start and End Locations of Ray-Cast(FVectors)
-	void CalculateRayCastLocation(FVector& RayCastStart, FVector& RayCastEnd);
+	void CalculateRayCastLocation(FVector& OUT_RayCastStart, FVector& OUT_RayCastEnd);
 };
