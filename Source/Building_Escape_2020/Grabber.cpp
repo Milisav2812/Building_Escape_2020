@@ -27,6 +27,7 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	if (!ensure(PhysicsHandle)) return;
 	if (PhysicsHandle->GrabbedComponent)
 	{
 		CalculateRayCastLocation(OUT_PARAM RayCastStart, OUT_PARAM RayCastEnd);
@@ -42,6 +43,7 @@ void UGrabber::Grab()
 	CalculateRayCastLocation(OUT_PARAM RayCastStart, OUT_PARAM RayCastEnd);
 	if (HitResult.GetActor())
 	{
+		if (!ensure(PhysicsHandle)) return;
 		PhysicsHandle->GrabComponentAtLocation(
 			GrabbedComponent,
 			NAME_None,
@@ -52,6 +54,7 @@ void UGrabber::Grab()
 }
 void UGrabber::Release()
 {
+	if (!ensure(PhysicsHandle)) return;
 	if (PhysicsHandle->GrabbedComponent)
 	{
 		PhysicsHandle->ReleaseComponent();

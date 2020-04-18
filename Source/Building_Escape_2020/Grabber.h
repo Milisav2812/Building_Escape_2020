@@ -32,7 +32,7 @@ public:
 
 private:
 	UPROPERTY(EditDefaultsOnly)
-	float GrabberReach = 100.f;
+	float GrabberReach = 160.f;
 
 	// Players Position in The World
 	FVector RayCastStart;
