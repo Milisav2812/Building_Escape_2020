@@ -75,3 +75,6 @@ DerivedDataCache/*
 
 # Starter Content
 Content/StarterContent/*
+
+# Medieval Content
+Content/MedievalDungeon/*

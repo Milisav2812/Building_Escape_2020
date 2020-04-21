@@ -101,6 +101,7 @@ float UOpenDoor::TotalMassOfActorsOnPressurePlate() const
 		TotalMass += ActorComponent->GetMass();
 	}
 
+	UE_LOG(LogTemp, Warning, TEXT("Total Mass is %f"), TotalMass)
 	return TotalMass;
 }
 
