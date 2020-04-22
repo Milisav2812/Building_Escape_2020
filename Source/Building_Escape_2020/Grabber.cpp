@@ -27,6 +27,7 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	
 	if (!ensure(PhysicsHandle)) return;
 	if (PhysicsHandle->GrabbedComponent)
 	{
@@ -126,8 +127,8 @@ void UGrabber::CalculateRayCastLocation(FVector& OUT_RayCastStart, FVector& OUT_
 
 	//DrawDebugLine(
 	//	GetWorld(),
-	//	LineTraceStart,
-	//	LineTraceEnd,
+	//	RayCastStart,
+	//	RayCastEnd,
 	//	FColor::Green,
 	//	NULL,
 	//	NULL,
