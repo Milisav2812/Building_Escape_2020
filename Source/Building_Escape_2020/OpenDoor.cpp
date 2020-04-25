@@ -26,6 +26,7 @@ void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
 
+
 	// Get CurrentYaw and set Target Yaw
 	CurrentDoorAngle = GetOwner()->GetActorRotation().Yaw;
 	CloseDoorAngle = CurrentDoorAngle;
