@@ -46,7 +46,10 @@ private:
 	ATriggerVolume* PressurePlate = nullptr;
 
 	UPROPERTY(EditAnywhere)
-	AActor* OpenActor = nullptr;
+	AActor* OpenActor1 = nullptr;
+
+	UPROPERTY(EditAnywhere)
+	AActor* OpenActor2 = nullptr;
 
 	
 	UAudioComponent* AudioComponent = nullptr;

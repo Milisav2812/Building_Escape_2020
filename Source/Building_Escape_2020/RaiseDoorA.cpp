@@ -34,7 +34,7 @@ void URaiseDoorA::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
 
 	if (!ensure(PressurePlate)) return;
 
-	if (PressurePlate->IsOverlappingActor(OpenActor))
+	if (PressurePlate->IsOverlappingActor(OpenActor1) || PressurePlate->IsOverlappingActor(OpenActor2))
 	{
 		OpenDoor(DeltaTime);
 	}
